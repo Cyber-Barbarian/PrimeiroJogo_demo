@@ -79,3 +79,27 @@ hit e morte
 	desmarcamos o visible colision shapes do debug e nosso personagem já está funcional
 
 Estrutura dos inimigos 
+	vamos criar uma nova cena para o inimigo, asim como fizemos com o personagem
+	CharachterBody2d + Sprite2d + ColisionShape2D + AnimationPlayer + Area2D(área de detecção) + ColisionShape2D + AnimationPlayer auxiliar
+	Carregamos todas as animações, mesmo padrão do herói
+	ajustamos a colisão na sombra e movemos para cima de texture, assim é renderizado atrás
+	em DetectionArea/Colision criamos uma área de colisão circular partindo do pé do personagem de raio 250 px e passamos a detection area para cima tb
+
+Associando código
+	criamos variaveis de velocidade e player_ref, e em detection area associamos a colisão à mascara 1 e sem layer
+	ja no goblin (CharacterBody2d/Collision), colocamos ele no layer 2, mascara 1
+	Vamos conectar dois sinais da DetectioArea:  body_entered e body_exited e colocamos para printar body
+	Vamos criar a cena do nível para ve a interação. 2DScene, renomeada para Level e salvar
+	Em Level/Scene vamos linkar os objetos Goblin e Knight no símbolo de corrente
+	rodando nosso lavel vamos ver que ele printa o cavaleiro ao entrar e sair da área
+	vamos trabalhar o movimento do goblin pela detecção do cavaleiro (player_ref) e pelo vetor de direção (var direction: Vector2 = global_position.direction_to(player_ref.global_position))
+	com a palavra reservada velocity e o método move_and_slide() vamos fazer nosso inimigo se mover
+
+Integrando animações
+	primeiramente armazenaremos a distância do nosso inimigo e o cavaleiro
+	com base na distância vamos renderizar o ataque
+	criaremos a função animate 
+	vamos copiar o update health do nosso personagem para nosso inimigo
+	vamos conectar o animation finished no goblin
+	Em level, selecionando cada um dos characterBody2d (goblin e guerreiro) e indo no inspector temos que desativar em Moving Plataform os Floor layers 1 e 2 e ativar como wall layers ou goblin e guerreiro podem se interpretar como plataformas e podem ficar "grudados" 
+	
