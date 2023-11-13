@@ -42,3 +42,40 @@ Criando as animações do personagem
 	Obs a animação attack foi feita com o método duplicate.
 	
 Integrando as animações por código
+	Criamos uma variável de referência ao animation player
+	separamos o movimento na função move e criamos a função animate
+	criamos a função attack_handler e a variável can_attack para lidar com a ação específca de ataque dentro da função animate
+	criamos um bloco verificando se can_attack é flase para tratar o problema de atacar enquanto se move
+	devemos prestar atenção no botão de loop das aimações. a unica que NÃO deve ter ele marcado é a de attack
+	um ponto de destaque é que, ao fim da animação, nosso boneco trava. isso acontece pq o can_attack fica setado para false e n]ão volta para true. 
+	para resolver isso conectamos o sinal de animação "animation_finished" disponível na aba node do inspector de animação (func _on_animation_finished)
+	usamos flip_h baseadom na velocity.x para girar o eixo do personagem.
+
+Hitbox de ataque
+	mudamos para o frame específico do ataque (0.3) e inserimos um nó do tipo area2d, que monitora ações de colisão
+	renomeamos para AttackArea e inserimos uma área de colisão (ColisionShape2D/Colision)
+	inserimos uma colision shape retangular, pegando toda a ára da espada. Essa é nossa hitbox de ataque
+	Vamos agora tratar via código a área de ataque para que ela mude junto com o flip_h (attack_area_colision.position.x). 
+	Em debug marcamos Visible colision shapes e rodamos. Desabilitamos a colisão no inspector para sincronizar ela com o frame de ataque 
+	Fazemos isso inserindo keys de disabled na animação (AttackArea/Collision/Inspector/Disabled)
+	Fazemos isso na animação de attack e animação de reset  rodamos as animações
+	agora vamos conectar um sinal do tipo body_entered (AttackArea/Node/body_entered) ao nosso personagem
+	manipulamos a Layer e Mask de nossa AttackArea para evitar que o personagem de hit em si  mesmo (AttackArea/Inspector/CollisionObject2D/Collision)
+	layer é aquilo que se é no mundo. a mask é aquilo que vc interage. nosso personagem é então da layer 1, com mask 2. Assim ele não colide com nada da layer 1, só 2
+	essa prática é importantepara evitar que o personagem de hit em si mesmo em caso de overlap
+	criamos uma função de update health e vamos forçar o overlap para teste, colocando o personagem na layer 2 e alterando attack_area_colision.position.x
+	voltamos aos valores originais
+hit e morte
+	em animation vamos criar a animação death e etar para cerca de 2 segundos
+	em texture importamos a animação de morte para o 2d do personagem, lembrando de adicionar as keys de texture, hframes, v frames e frames, assim não haverá bug com as demais texturas
+	vamos tratar a morte de nosso personagem pela variável can_die , que vai auxiliar a determinar que animações devem ser renderizadas
+	desabilitamos a area de colisão para o caso de morte
+	vamos agora tratar da animação de hit por meio de uma animation auxiliar
+	na animação de hit vamos alterar somente o modulate da textura, fazendo o boneco ficar vermelho
+	Texture>inspector>canvasItem>modulate : no instante 0.0 botamos um key modulate para vermelho e na sequencia em 0.2 um key modulate para branco
+	inserimos em código, da mesma forma que o animate dentro da update_health
+	retornamos a hitbox (attack_area_colision.position.x) ao tamanho normal (56)
+	Na AttackArea vmos deixar o personagem somene na layer 1, com mask 2
+	desmarcamos o visible colision shapes do debug e nosso personagem já está funcional
+
+Estrutura dos inimigos 
