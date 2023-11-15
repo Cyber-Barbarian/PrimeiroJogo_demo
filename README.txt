@@ -103,3 +103,19 @@ Integrando animações
 	vamos conectar o animation finished no goblin
 	Em level, selecionando cada um dos characterBody2d (goblin e guerreiro) e indo no inspector temos que desativar em Moving Plataform os Floor layers 1 e 2 e ativar como wall layers ou goblin e guerreiro podem se interpretar como plataformas e podem ficar "grudados" 
 	
+Criando area de ataque e flip do inimigo
+	#inroduzimos o flip no codigo
+	pra area de ataque do inimigo vamos fazer algo diferente. vamos criar uma cena que vai ser a área de ataque, que será deletada em alguns segundos (uma área 2d)
+	EnemyAttackArea2D -> criamos um ColisionShape2D circular com um raio de 80px, retiramos odas as layers e deixamos a mask em 1  e criamos para ela um script
+	no script vamos conectar o sinal de on_body_entered e criar um damage para que nosso personagem tome dano
+	olhando o animation do nosso goblin vemos que o dano ocorre entre os frames 0.3 e 0.4
+	dessa forma vamos introduzir no nosso EnemyAttackArea2D um timer, marcando oneshot e autostart
+	nossa área de ataque terá, como vimos em animation, tem um spawn de apenas 0.1s, então tb mudamos o wait time para 0.1s
+	vamos conectar no código um sinal de timeout para deletarmos o temporizador após a execução (renomeei para _on_lifetime_timeout e adicionei o queue_free)
+	agora sincronizaremos a animação do goblin com o método do código de enemyAttackArea2D
+	No código do goblin criamos uma função que spawna a área de ataque (spawn_attack_area)
+	criamos uma const ENEMY_ATTACK_AREA que será uma cena (PackedScene) e pre carregamos (preload) nossa cena EnemyAttackArea2D
+	com o preload podemos pré carregar uma cena, sem a necessidade de acrescentá-la manualmente como filha em goblin
+	em spawn_attack_area instanciamos nossa área de ataque, determinamos a posição e adicionamos ela via código como filha 
+	queremos que a spawn_attack_area seja chamada somente no frame exato de ataque
+	

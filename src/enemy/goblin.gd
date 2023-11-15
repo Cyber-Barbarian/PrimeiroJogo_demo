@@ -1,15 +1,20 @@
 extends CharacterBody2D
 
-var player_ref:CharacterBody2D = null #a referência do cavaleiro
+const ENEMY_ATTACK_AREA:PackedScene = preload("res://src/enemy/enemy_attack_area_2d_scene.tscn")
+
+@onready var texture:Sprite2D = get_node("Texture")
 @export var move_speed:float = 190.0  #ligeiramente menor que a nossa
 @onready var animation:AnimationPlayer = get_node("Animation")
 @export var distance_treshold:float = 60.0
+@onready var colision:CollisionShape2D = get_node("Collision") 
 
 #trazendo de knight
+var player_ref:CharacterBody2D = null #a referência do cavaleiro
 @export var damage: int = 1
 @export var health:int = 3
 var can_attack:bool = true 
 var can_die:bool = false
+
 @onready var aux_animation: AnimationPlayer = get_node("AuxiliaryAnimation")
 
 func _physics_process(_delta):
@@ -30,14 +35,27 @@ func _physics_process(_delta):
 	move_and_slide()
 	
 	
+func spawn_attack_area()->void:
+	var attack_area = ENEMY_ATTACK_AREA.instantiate()
+	#attack_area.position = position + Vector2(0,28) #a posição de nossa área de ataque será a posição do gobin + um offset referente á posição da colisão 
+	attack_area.position = position + colision.position #código melhorado: a posição de nossa área de ataque será a posição do gobin + um offset referente á posição da colisão 
+	add_child(attack_area)
 
 func animate(distance:float = distance_treshold)-> void:
+	#flip
+	if velocity.x >0 :
+		texture.flip_h = false
+	if velocity.x<0:
+		texture.flip_h = true
+	#atacar
 	if distance < distance_treshold:
 		animation.play("attack")
 		return
+	#perseguir
 	if velocity != Vector2.ZERO:
 		animation.play("run")
 		return
+	#parado
 	animation.play("idle")
 
 func _on_detection_area_body_entered(body):
