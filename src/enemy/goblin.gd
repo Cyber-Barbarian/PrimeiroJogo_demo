@@ -7,7 +7,7 @@ const ENEMY_ATTACK_AREA:PackedScene = preload("res://src/enemy/enemy_attack_area
 @onready var animation:AnimationPlayer = get_node("Animation")
 @export var distance_treshold:float = 60.0
 @onready var colision:CollisionShape2D = get_node("Collision") 
-
+@onready var goblin:CharacterBody2D = get_node("Goblin")
 #trazendo de knight
 var player_ref:CharacterBody2D = null #a referência do cavaleiro
 @export var damage: int = 1
@@ -21,7 +21,7 @@ func _physics_process(_delta):
 	if can_die:
 		return
 	
-	if player_ref == null:
+	if player_ref == null or player_ref.can_die: #se nosso personagem morre, ele para
 		velocity = Vector2.ZERO #garantir que vai voltar para idle
 		animate()
 		return
@@ -37,8 +37,13 @@ func _physics_process(_delta):
 	
 func spawn_attack_area()->void:
 	var attack_area = ENEMY_ATTACK_AREA.instantiate()
+	'''bug
 	#attack_area.position = position + Vector2(0,28) #a posição de nossa área de ataque será a posição do gobin + um offset referente á posição da colisão 
-	attack_area.position = position + colision.position #código melhorado: a posição de nossa área de ataque será a posição do gobin + um offset referente á posição da colisão 
+	#attack_area.position = position + colision.position #código melhorado: a posição de nossa área de ataque será a posição do gobin + um offset referente á posição da colisão 
+	#se usarmos só position no offset ele vai pegar a posição do goblin no plano e somar o offsef, o que vai deslocar muito a área de ataque
+	#omitimos position, pq como o script é de goblin ele já roda sobre o objeto correto
+	'''
+	attack_area.position =  colision.position
 	add_child(attack_area)
 
 func animate(distance:float = distance_treshold)-> void:
@@ -66,7 +71,7 @@ func _on_detection_area_body_exited(_body): #o _ nas variáveis de função serv
 	player_ref = null
 
 
-func update_healt(damage:int)->void:
+func update_health(damage:int)->void:
 	health-=damage
 	if health<=0:
 		can_die = true

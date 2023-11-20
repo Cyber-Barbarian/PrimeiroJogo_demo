@@ -68,9 +68,9 @@ func _on_animation_finished(anim_name:String) -> void: #esse sinal vai rodar no 
 
 func _on_attack_area_body_entered(body:Node2D) -> void:
 	#essa função notifica qualquer corpo que entre na área 
-	body.update_healt(damage)
+	body.update_health(damage)
 
-func update_healt(damage:int)->void:
+func update_health(damage:int)->void:
 	health-=damage
 	if health<=0:
 		can_die = true

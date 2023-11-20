@@ -118,4 +118,54 @@ Criando area de ataque e flip do inimigo
 	com o preload podemos pré carregar uma cena, sem a necessidade de acrescentá-la manualmente como filha em goblin
 	em spawn_attack_area instanciamos nossa área de ataque, determinamos a posição e adicionamos ela via código como filha 
 	queremos que a spawn_attack_area seja chamada somente no frame exato de ataque
-	
+	para isso vamos em Goblin/Animation, mudamos para o frame de ataque, clicamos em Add Track e escolhemos Call Method Track,selecionamos goblin e clicamos em ok
+	agora podemos inserir qalquer método do código, em qualquer momento
+	em 0.3 clicamos com o direito e vamos inserir a key spawn_attack_area. rodando o level com f6 vemos que há descompasso entre área de colisão e personagem.
+	obtivemos um bug da área. olhar o comentário entre aspas em spawn_attack_area
+	ajustamos o comportamento do goblin para parar de atacar quando morremos
+
+Terreno
+	criaremos em level um node2D chamado terrain e adicionaremos como filho dele um tilemap e chamaremos de grass
+	no inspector vamos mudar o tamanho do quadrante para 64 e criar o tile  set, especificando um tile size de 64X64 px
+	em files, vamos pegar nossa grama (terrain/ground/grass.png) e arrastar para tiles, criando o atlas
+	temos agora as texturas bases
+	mas primeiro, no inspector, vamos em terrain sets e adicionaremos um elemento para criar um autotile, a propria godot calcula o melhor tile
+	vamos na parte inferior em paint, selecionamos a propriedade terrains
+	Vamos pasar o terrains set 0 em em no terrain o terrain 0 que criamos, e vamos marcando do lado os blocos que desejamos
+	selecionamos tudo menos a borda
+	agora vamos na parte inferior em tileMap, terrains, selecionamos terrain 0
+	fui antes no goblin e no knight e desmarquei canvas item visibility para ver melhor
+	com o clique esquerdo vamos pintando, com o direito apagando, ctrl+shift ajudam a fazer em área
+	ponto importante: terrain tem que ser passado para o topo para ser renderizado por último, se não fica em cima dos bonecos
+	voltando para knight, vamos adicionar uma câmera em nosso personagem, não fizemos antes pq seria complicado debugar sem o terreno
+	em knight vamos adicionar uma camera 2d (camera). ela por padrão já vem ativada
+	em inspector vamos marcar position smooting pra suavizer o movimento
+	vamos adicionar um novo tilemap que chamaremos de water, e terá a água e colisão do limite do terreno(mesmo esquema, 64X64 px)
+	adicionamos a agua (tileset/tiles/adicionamos a water.png)
+	no nó Water vamos em phisics layers e adicionamos elemento, criando uma camada de colisão,
+	colocamos mascara na camada 1 e 2. desmarcamos o colision layer
+	em tileset/tiles/paint vamos na propriedade physics layer 
+	damos um click em base tiles para adicionar a colisão.
+
+Água via código
+	vamos adicionar a água via código no terreno
+	após adicionar, vimos que a água fico acima da grama. invertemos a posição dos nós.
+	BUG -> nosso personagem se move na água. 
+	vamos ajustar a colisão em level/goblin e level/knight acrescentando mascara na camada 3.
+	ainda em level, em seguida vamos adicionar  colision layer 3 em water
+	O bug aconteceu pq as células de água foram adicionadas no mesmo spot que as de grama. vamos então melhorar nossa função no código
+	isso é resolvido pela variável grass_used_cells e um condicional
+
+spawnando a maré na borda
+	vamos criar uma nova cena com animatedSprite2D (Foam)
+	no inspector vamos em animatedSprite2d, Animation, sprite. criamos um novo
+	na parte inferior em SpriteFrames renomeamos a animação para idle e colocamos com 10FPS
+	ainda na parte inferior, no grid, vamos procurar nosso foam.png e adicionar, alterando para 8 grids na horizontal e 1 na vertical
+	dando play podemos ver como fica. salvamos e fechamos
+	voltamos em level e vamos adicionar via código no terreno
+	BUG -> a maré está renderizando no topo do terreno solução:
+		na cena foam, vamos em  foam/ordering/z index vamos diminuiro o index para -1
+		ainda em foam vamos em SpriteFrames e marcamos o A de autoplay on load
+		na cena level,  water/ordering vamos diminuir para -2
+
+Criando menu
