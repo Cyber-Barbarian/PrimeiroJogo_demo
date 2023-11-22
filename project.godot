@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="PrimeiroJogo_Demo"
-run/main_scene="res://src/knight/knight.tscn"
+run/main_scene="res://src/menu/menu.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+TransitionScreen="*res://src/menu/transition_screen.tscn"
 
 [input]
 

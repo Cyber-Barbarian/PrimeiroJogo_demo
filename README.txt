@@ -169,3 +169,23 @@ spawnando a maré na borda
 		na cena level,  water/ordering vamos diminuir para -2
 
 Criando menu
+	usaremos a fonte kurland
+	criaremos uma nova cena do tipo User interface, renomeamos para menu e adicionamos uma label (game name)
+	Alinhamos à esquerda com centro e adicionamos a fonte kurland. aumentamos a fonte para 64px, adicionamos margem em layout etc...
+	adicionaremos  caixas de seleção VBoxContainer e renomeamos para ButtonsContainer
+	setamos o tamanho 240X300, alinamos bottom right e colocamos um offset de -60 em ambas as direçoes
+	dentro dela adicionaremos os bottoes (button), colocamos new game com nossa fonte. duplicamos para criar o botão de quit e em buttonContainer criamos uma separação
+	adicionamos ambos os botoes no grupo botão
+	vamos associar um script e para cada botão dar uma função, conectando o sinal de pressionado
+	
+Criando transição
+	nova cena -> canvas layer (transition screen) com um color rect de tela toda (anchor full rect) na cor preta
+	vamos adicionar um no de animação e criar uma animação fade in e outra fade out
+	adicionamos a função de fade in e fade out via script
+	para podermos utilizar nossa cena de fade in e fade out de qualquer lugar do projeto, vamos pre carrega-la. na parte superior vamos em Project>Project Sttings>Autoload e caregamos a cena de transition screen
+	agora ela é acessável de toda parde do nosso projeto, podendo ser acessada de nosso menu
+	alteramos tb o filtro do mouse de nossa transition screen para ignore
+	fizemos tb um fade out ao abrir o jogo e um fade in ao dar quit (variavel can_quit)
+	na cena level, em terrain, clicamos com o direito e salvamos a branch terrain como uma cena. em seguida clicamos tb com o direito e marcamos make local
+	em menu vamos instanciar (simbolo da corrente) o terreno que salvamos, tornal local e vamos apagar um pouco de grama. apagamos todo e desenhamos um pouquinho de grama. diminuímos o z index para aparecer no fundo
+	vamos rodar o menu novamente, mas dessa vez com F5, e tornar a cena do menu nossa cena principal. isso tb pode ser feito em propriedades. (project > project settings > application > run)
